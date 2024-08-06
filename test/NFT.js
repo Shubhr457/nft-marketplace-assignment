@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat"); // Ensure this line is present
+const { ethers } = require("hardhat"); 
 
 describe("NFTSTORE", function () {
     let NFTSTORE, nftStore, owner, addr1, addr2;
@@ -7,12 +7,12 @@ describe("NFTSTORE", function () {
     beforeEach(async function () {
         NFTSTORE = await ethers.getContractFactory("NFTSTORE");
         [owner, addr1, addr2, _] = await ethers.getSigners();
-        nftStore = await NFTSTORE.deploy(); // Deploy the contract
+        nftStore = await NFTSTORE.deploy(); 
     });
 
     it("Should create an NFT and list it", async function () {
         const tokenURI = "ipfs://token_uri";
-        const price = ethers.parseEther("1"); // Make sure ethers is correctly imported
+        const price = ethers.parseEther("1"); 
         await nftStore.connect(addr1).createToken(tokenURI, price);
 
         const tokenId = await nftStore.getCurrentTokenId();
@@ -55,24 +55,7 @@ describe("NFTSTORE", function () {
         expect(offers[0].offerer).to.equal(addr2.address);
     });
 
-    // it("Should allow the owner to accept an offer", async function () {
-    //     const tokenURI = "ipfs://token_uri";
-    //     const price = ethers.parseEther("1");
-    //     const offerPrice = ethers.parseEther("0.8");
-    //     await nftStore.connect(addr1).createToken(tokenURI, price);
-
-    //     const tokenId = await nftStore.getCurrentTokenId();
-    //     await nftStore.connect(addr2).makeOffer(tokenId, offerPrice);
-
-    //     await nftStore.connect(addr1).acceptOffer(tokenId, 0);
-
-    //     const newOwner = await nftStore.ownerOf(tokenId);
-    //     const listing = await nftStore.getNFTListing(tokenId);
-
-    //     expect(newOwner).to.equal(addr2.address);
-    //     expect(listing.isListed).to.equal(false);
-    // });
-
+  
     it("Should allow the owner to cancel a listing", async function () {
         const tokenURI = "ipfs://token_uri";
         const price = ethers.parseEther("1");
