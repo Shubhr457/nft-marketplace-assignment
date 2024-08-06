@@ -1,14 +1,12 @@
 async function main() {
-    const NFTMarketplace = await ethers.getContractFactory("NFTMarketplace");
-    const nftMarketplace = await NFTMarketplace.deploy();
-  
-    await nftMarketplace.deployed();
-  
-    console.log("NFT Marketplace contract deployed to:", nftMarketplace.address);
+    const NFTStore = await ethers.getContractFactory("NFTSTORE");
+    const nftStore = await NFTStore.deploy();
+    console.log("NFTStore deployed to:", nftStore.address);
   }
   
-  main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
-  
+  main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
