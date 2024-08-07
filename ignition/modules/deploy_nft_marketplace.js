@@ -7,7 +7,6 @@ async function main() {
     const NFTStore = await hre.ethers.getContractFactory("NFTSTORE");
     const nftStore = await NFTStore.deploy();
     
-    // Wait for the contract to be deployed
     await nftStore.waitForDeployment();
 
     console.log("NFTStore deployed to:", nftStore.target);
