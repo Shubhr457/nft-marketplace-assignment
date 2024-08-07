@@ -1,18 +1,21 @@
-async function main() {
-    const NFTStore = await ethers.getContractFactory("NFTSTORE");
-    const nftStore = await NFTStore.deploy();
-    console.log("NFTStore deployed to:", nftStore.address);
+const hre = require("hardhat");
 
-     await run("verify:verify", {
-    address: NFTSTORE.address,
-    constructorArguments: [],
-  });
+async function main() {
+    const [deployer] = await hre.ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+
+    const NFTStore = await hre.ethers.getContractFactory("NFTSTORE");
+    const nftStore = await NFTStore.deploy();
+    
+    // Wait for the contract to be deployed
+    await nftStore.waitForDeployment();
+
+    console.log("NFTStore deployed to:", nftStore.target);
 }
-  }
-  
-  main()
+
+main()
     .then(() => process.exit(0))
     .catch((error) => {
-      console.error(error);
-      process.exit(1);
+        console.error(error);
+        process.exit(1);
     });
