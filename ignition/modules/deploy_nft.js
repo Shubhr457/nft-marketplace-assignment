@@ -4,6 +4,12 @@ async function main() {
   
     // await nft.deployed();
     //console.log("nft",nft)
+
+     await run("verify:verify", {
+    address: MyNFT.address,
+    constructorArguments: [],
+  });
+}
   
     console.log("NFT contract deployed to:", nft.address);
   }
