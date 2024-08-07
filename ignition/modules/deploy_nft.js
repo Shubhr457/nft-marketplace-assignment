@@ -1,21 +1,21 @@
-async function main() {
-    const NFT = await ethers.getContractFactory("MyNFT");
-    const nft = await NFT.deploy();
-  
-    // await nft.deployed();
-    //console.log("nft",nft)
+const hre = require("hardhat");
 
-     await run("verify:verify", {
-    address: MyNFT.address,
-    constructorArguments: [],
-  });
+async function main() {
+    const [deployer] = await hre.ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+
+    const NFT = await hre.ethers.getContractFactory("MyNFT");
+    const nft = await NFT.deploy();
+    
+    // Wait for the contract to be deployed
+    await nft.waitForDeployment();
+
+    console.log("NFT contract deployed to:", nft.target);
 }
-  
-    console.log("NFT contract deployed to:", nft.address);
-  }
-  
-  main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
-  
+
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });
