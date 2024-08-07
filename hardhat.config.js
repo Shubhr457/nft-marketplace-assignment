@@ -28,7 +28,7 @@ module.exports = {
         chainId: 80002, // Replace with your chain ID
         urls: {
           apiURL: "https://api-testnet.polygonscan.com/api",
-          browserURL: "https://mumbai.polygonscan.com"
+          browserURL: "https://polygonscan.com"
         }
       }
     ]
