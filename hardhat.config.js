@@ -16,8 +16,8 @@ module.exports = {
   },
   networks: {
     amoy: {
-      url: "https://polygon-amoy.g.alchemy.com/v2/hXwE8n7cqsBK_9BwpPmlQ4nmTLh3t3Jd", // Replace with the actual Amoy testnet URL
-      accounts: ["eedd5eed4e6aab6ae6987b0dd6e700890907e2ee21c080037430bfe44cdf82d7"] // Replace with your testnet account private key
+      url: "https://polygon-amoy.g.alchemy.com/v2/hXwE8n7cqsBK_9BwpPmlQ4nmTLh3t3Jd", 
+      accounts: ["eedd5eed4e6aab6ae6987b0dd6e700890907e2ee21c080037430bfe44cdf82d7"] 
     }
   },
   etherscan: {
@@ -25,7 +25,7 @@ module.exports = {
     customChains: [
       {
         network: "amoy",
-        chainId: 80002, // Replace with your chain ID
+        chainId: 80002, 
         urls: {
           apiURL: "https://api-testnet.polygonscan.com/api",
           browserURL: "https://polygonscan.com"
