@@ -14,24 +14,26 @@ module.exports = {
       }
     }
   },
-  networks: {
+ networks: {
     amoy: {
-      url: "https://polygon-amoy.g.alchemy.com/v2/hXwE8n7cqsBK_9BwpPmlQ4nmTLh3t3Jd", 
-      accounts: ["eedd5eed4e6aab6ae6987b0dd6e700890907e2ee21c080037430bfe44cdf82d7"] 
+      url: process.env.AMOY_RPC_URL, 
+      accounts: [process.env.PRIVATE_KEY] 
     }
   },
   etherscan: {
-    apiKey: "BDVG74Z27JY6P2BXAI6FNE3KFRI3GF76ZY",
+    apiKey: {
+      polygonAmoy: 'CEZZEM3C6PSHKYD6HDKP8A63PRN9TVWPD9'
+    },
     customChains: [
       {
-        network: "amoy",
-        chainId: 80002, 
+        network: "polygonAmoy",
+        chainId: 80002,
         urls: {
-          apiURL: "https://api-testnet.polygonscan.com/api",
-          browserURL: "https://polygonscan.com"
-        }
+          apiURL: "https://api-amoy.polygonscan.com/api",
+          browserURL: "https://amoy.polygonscan.com"
+        },
       }
     ]
-  }
+  },
   
 };
