@@ -1,6 +1,7 @@
 # NFTSTORE Smart Contract
 
 ## Overview
+Verified Contract URL : https://amoy.polygonscan.com/address/0xd8AA6D352D8aC148F999e4e16a42A4Ae3657c79f#code
 
 **NFTSTORE** is a Solidity smart contract that implements an NFT (Non-Fungible Token) marketplace on the Ethereum blockchain. The contract allows users to create, list, buy, make offers on, and sell NFTs. It is built using the ERC-721 standard, utilizing the OpenZeppelin library for secure and robust implementation.
 
