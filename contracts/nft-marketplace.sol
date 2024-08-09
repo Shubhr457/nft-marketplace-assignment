@@ -10,6 +10,8 @@ contract NFTSTORE is ERC721URIStorage {
     uint256 private currentTokenId;
     uint256 private totalItemsSold;
 
+    receive() external payable { }
+
     struct NFTListing {
         uint256 tokenId;
         address payable owner;
@@ -108,9 +110,13 @@ contract NFTSTORE is ERC721URIStorage {
         emit NFTSold(_tokenId, msg.sender, price);
     }
 
-    function makeOffer(uint256 _tokenId, uint256 _offerPrice) public {
+
+    function makeOffer(uint256 _tokenId, uint256 _offerPrice) public payable {
         require(_offerPrice > 0, "Offer price must be greater than zero");
         require(tokenIdToListing[_tokenId].isListed, "NFT is not listed for sale");
+        require(msg.value == _offerPrice, "Send enough amount");
+
+        payable(address(this)).transfer(_offerPrice);
 
         tokenIdToOffers[_tokenId].push(Offer({
             offerer: payable(msg.sender),
@@ -120,25 +126,37 @@ contract NFTSTORE is ERC721URIStorage {
         emit OfferMade(_tokenId, msg.sender, _offerPrice);
     }
 
-    function acceptOffer(uint256 _tokenId, uint256 _offerIndex) public onlyTokenOwner(_tokenId) {
+    function amountInContract() public view returns (uint256){
+        return address(this).balance;
+    }
+
+    function acceptOffer(uint256 _tokenId, uint256 _offerIndex) public {
+        require(_offerIndex < tokenIdToOffers[_tokenId].length, "Invalid offer index");
+        
         Offer memory offer = tokenIdToOffers[_tokenId][_offerIndex];
-        require(tokenIdToListing[_tokenId].isListed, "NFT is not listed for sale");
+        NFTListing storage listing = tokenIdToListing[_tokenId];
+        
+        require(msg.sender == listing.seller, "Only seller can accept offer");
+        require(address(this).balance >= offer.price, "Insufficient contract balance");
 
-        uint256 offerPrice = offer.price;
-        address payable offerer = offer.offerer;
-
+        address payable buyer = payable(offer.offerer);
+        uint256 salePrice = offer.price;
+        
         tokenIdToOffers[_tokenId][_offerIndex] = tokenIdToOffers[_tokenId][tokenIdToOffers[_tokenId].length - 1];
         tokenIdToOffers[_tokenId].pop();
 
-        _transfer(msg.sender, offerer, _tokenId);
+        _transfer(listing.owner, buyer, _tokenId);
 
-        uint256 listingFee = (offerPrice * listingFeePercent) / 100;
-        marketplaceOwner.transfer(listingFee);
-        payable(msg.sender).transfer(offerPrice - listingFee);
+        payable(listing.seller).transfer(salePrice);
 
-        tokenIdToListing[_tokenId].isListed = false;
+        for(uint256 i = 0; i < tokenIdToOffers[_tokenId].length; i++) {
+            Offer memory otherOffer = tokenIdToOffers[_tokenId][i];
+            payable(otherOffer.offerer).transfer(otherOffer.price);
+        }
 
-        emit OfferAccepted(_tokenId, offerer, offerPrice);
+        delete tokenIdToOffers[_tokenId];
+
+        emit OfferAccepted(_tokenId, buyer, salePrice);
     }
 
     function cancelListing(uint256 _tokenId) public onlyTokenOwner(_tokenId) {
@@ -193,3 +211,4 @@ contract NFTSTORE is ERC721URIStorage {
         return myNFTs;
     }
 }
+
