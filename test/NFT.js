@@ -44,18 +44,42 @@ describe("NFTSTORE", function () {
         const price = ethers.parseEther("1");
         const offerPrice = ethers.parseEther("0.8");
         await nftStore.connect(addr1).createToken(tokenURI, price);
-
+    
         const tokenId = await nftStore.getCurrentTokenId();
-        await nftStore.connect(addr2).makeOffer(tokenId, offerPrice);
-
+        await nftStore.connect(addr2).makeOffer(tokenId, offerPrice, { value: offerPrice }); 
+    
         const offers = await nftStore.getOffers(tokenId);
-
+    
         expect(offers.length).to.equal(1);
         expect(offers[0].price).to.equal(offerPrice);
         expect(offers[0].offerer).to.equal(addr2.address);
     });
-
-  
+    
+    it("Should accept an offer on a listed NFT", async function () {
+        const tokenURI = "ipfs://token_uri";
+        const price = ethers.parseEther("1");
+        const offerPrice = ethers.parseEther("0.8");
+    
+        await nftStore.connect(owner).createToken(tokenURI, price);
+        const tokenId = await nftStore.getCurrentTokenId();
+    
+        await nftStore.connect(addr1).makeOffer(tokenId, offerPrice, { value: offerPrice });
+    
+        const initialOwner = await nftStore.ownerOf(tokenId);
+        console.log("Initial Owner:", initialOwner);
+    
+        await nftStore.connect(owner).acceptOffer(tokenId, 0);
+    
+        const newOwner = await nftStore.ownerOf(tokenId);
+        console.log("New Owner:", newOwner);
+    
+        const listing = await nftStore.getNFTListing(tokenId);
+    
+        expect(newOwner).to.equal(addr1.address);
+        expect(listing.isListed).to.equal(true); 
+    });
+    
+    
     it("Should allow the owner to cancel a listing", async function () {
         const tokenURI = "ipfs://token_uri";
         const price = ethers.parseEther("1");
